@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import Ionicons from 'react-native-vector-icons/Ionicons'; // Cambiado a Ionicons
 import Mapa from '../components/Mapa';
 import { ProductCard, products } from '../components/ProductCard'; // Importamos los productos y el componente ProductCard
 
@@ -27,7 +27,7 @@ const Home = () => {
           onSubmitEditing={handleSearch}
         />
         <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-          <FontAwesome name="search" size={20} color="#B0B0B0" />
+          <Ionicons name="search-outline" size={20} color="#B0B0B0" /> {/* Reemplazado */}
         </TouchableOpacity>
       </View>
 
