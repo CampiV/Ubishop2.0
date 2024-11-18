@@ -1,26 +1,26 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import Ionicons from 'react-native-vector-icons/Ionicons'; // Cambiado a Ionicons
 
 const BotonFooter = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.button}>
-        <FontAwesome name="home" size={24} color="black" />
+        <Ionicons name="home-outline" size={24} color="black" /> {/* Reemplazado */}
         <Text style={styles.label}>Home</Text>
       </TouchableOpacity>
 
       <View style={styles.divider} />
 
       <TouchableOpacity style={styles.button}>
-        <FontAwesome name="tag" size={24} color="black" />
+        <Ionicons name="pricetag-outline" size={24} color="black" /> {/* Reemplazado */}
         <Text style={styles.label}>Productos</Text>
       </TouchableOpacity>
 
       <View style={styles.divider} />
 
       <TouchableOpacity style={styles.button}>
-        <FontAwesome name="user" size={24} color="black" />
+        <Ionicons name="person-outline" size={24} color="black" /> {/* Reemplazado */}
         <Text style={styles.label}>Mi Perfil</Text>
       </TouchableOpacity>
     </View>
