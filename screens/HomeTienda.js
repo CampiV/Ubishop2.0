@@ -2,10 +2,27 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 
-const HomeTienda = ({ storeName = "Tu Tienda" }) => {
+const HomeTienda = ({ navigation, storeName = "Tu Tienda" }) => {
   const handlePress = (action) => {
-    console.log(`Botón presionado: ${action}`);
-    // Aquí puedes agregar la navegación o funcionalidad específica para cada botón
+    switch (action) {
+      case 'Suscripción':
+        navigation.navigate('SuscripcionTienda'); // Navegar a SeleccionSuscripcion.js
+        break;
+      case 'Agregar producto':
+        navigation.navigate('AgregarProducto'); // Navegar a AgregarProducto.js
+        break;
+      case 'Editar producto':
+        navigation.navigate('EditarProducto'); // Navegar a EditarProducto.js
+        break;
+      case 'Eliminar producto':
+        navigation.navigate('EliminarProducto'); // Navegar a EliminarProducto.js
+        break;
+      case 'Informes':
+        console.log('Informes');
+        break;
+      default:
+        console.log(`Acción desconocida: ${action}`);
+    }
   };
 
   return (

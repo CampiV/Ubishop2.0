@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-const RegistroCliente = () => {
+const RegistroCliente = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
@@ -13,17 +13,14 @@ const RegistroCliente = () => {
     }
     console.log('Email:', email);
     console.log('Contraseña:', password);
-    // Aquí puedes agregar la lógica de registro
+    // Lógica adicional de registro aquí...
+    navigation.navigate('Login'); // Redirige al Login después del registro
   };
 
   return (
     <View style={styles.container}>
-      {/* Título */}
-      <Text style={styles.title}>Registrarse</Text>
-
-      {/* Contenedor del formulario */}
+      <Text style={styles.title}>Registro de Cliente</Text>
       <View style={styles.formContainer}>
-        {/* Campo de Email */}
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -31,8 +28,6 @@ const RegistroCliente = () => {
           value={email}
           onChangeText={setEmail}
         />
-
-        {/* Campo de Contraseña */}
         <TextInput
           style={styles.input}
           placeholder="Contraseña"
@@ -41,8 +36,6 @@ const RegistroCliente = () => {
           onChangeText={setPassword}
           secureTextEntry
         />
-
-        {/* Campo de Repetir Contraseña */}
         <TextInput
           style={styles.input}
           placeholder="Repita contraseña"
@@ -51,8 +44,6 @@ const RegistroCliente = () => {
           onChangeText={setRepeatPassword}
           secureTextEntry
         />
-
-        {/* Botón de Registrarse */}
         <TouchableOpacity style={styles.button} onPress={handleRegister}>
           <Text style={styles.buttonText}>Registrarse</Text>
         </TouchableOpacity>

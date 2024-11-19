@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker'; // Asegúrate de instalar esta librería
 
-const SeleccionSuscripcion = () => {
+const SeleccionSuscripcion = ({ navigation }) => {
   const [selectedSubscription, setSelectedSubscription] = useState('mensual');
   const [price, setPrice] = useState(5000);
   const [isPickerVisible, setPickerVisible] = useState(false);
@@ -25,7 +25,8 @@ const SeleccionSuscripcion = () => {
   const handlePayment = () => {
     console.log(`Suscripción seleccionada: ${selectedSubscription}`);
     console.log(`Precio: $${price}`);
-    // Aquí puedes agregar la lógica de pago
+    // Redirige a la pantalla de suscripción de tienda o lógica adicional de pago
+    navigation.navigate('SuscripcionTienda', { subscriptionType: selectedSubscription });
   };
 
   return (
@@ -38,7 +39,9 @@ const SeleccionSuscripcion = () => {
           style={styles.subscriptionInput}
           onPress={() => setPickerVisible(!isPickerVisible)}
         >
-          <Text style={styles.subscriptionText}>{selectedSubscription.charAt(0).toUpperCase() + selectedSubscription.slice(1)} suscripción</Text>
+          <Text style={styles.subscriptionText}>
+            {selectedSubscription.charAt(0).toUpperCase() + selectedSubscription.slice(1)} suscripción
+          </Text>
         </TouchableOpacity>
 
         {isPickerVisible && (

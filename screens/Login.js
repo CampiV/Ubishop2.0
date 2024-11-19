@@ -11,11 +11,6 @@ const Login = ({ navigation }) => {
     // Aquí puedes agregar la lógica de inicio de sesión
   };
 
-  const handleRegister = () => {
-    console.log('Ir a registro');
-    // Aquí puedes navegar a la pantalla de registro si está implementada
-  };
-
   return (
     <View style={styles.container}>
       {/* Título */}
@@ -54,7 +49,7 @@ const Login = ({ navigation }) => {
       <Text style={styles.orText}>o</Text>
 
       {/* Enlace a Registrarse */}
-      <TouchableOpacity onPress={handleRegister}>
+      <TouchableOpacity onPress={() => navigation.navigate('SeleccionRegistro')}>
         <Text style={styles.registerText}>Registrarse</Text>
       </TouchableOpacity>
     </View>

@@ -1,10 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const SuscripcionTienda = ({ subscriptionType = "Tipo suscripción", startDate = "Fecha de inicio", endDate = "Fecha de finalización" }) => {
+const SuscripcionTienda = ({ navigation, subscriptionType = "Tipo suscripción", startDate = "Fecha de inicio", endDate = "Fecha de finalización" }) => {
   const handleChangeSubscription = () => {
-    console.log("Cambiar suscripción");
-    // Aquí puedes agregar la lógica para cambiar la suscripción
+    navigation.navigate('SeleccionSuscripcion'); // Navegar a SeleccionSuscripcion.js
   };
 
   return (

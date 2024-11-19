@@ -1,56 +1,74 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { useAuth } from './AuthContext';
 
 const BotonFooter = () => {
-  return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.button}>
-        <FontAwesome name="home" size={24} color="black" />
-        <Text style={styles.label}>Home</Text>
-      </TouchableOpacity>
+    const navigation = useNavigation();
+    const { role } = useAuth();
 
-      <View style={styles.divider} />
+    return (
+        <View style={styles.container}>
+            {/* Botón Home */}
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate(role === 'Tienda' ? 'HomeTienda' : 'Home')}
+            >
+                <FontAwesome name="home" size={24} color="black" />
+                <Text style={styles.label}>Home</Text>
+            </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button}>
-        <FontAwesome name="tag" size={24} color="black" />
-        <Text style={styles.label}>Productos</Text>
-      </TouchableOpacity>
+            <View style={styles.divider} />
 
-      <View style={styles.divider} />
+            {/* Botón Productos */}
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Productos')}>
+                <FontAwesome name="tag" size={24} color="black" />
+                <Text style={styles.label}>Productos</Text>
+            </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button}>
-        <FontAwesome name="user" size={24} color="black" />
-        <Text style={styles.label}>Mi Perfil</Text>
-      </TouchableOpacity>
-    </View>
-  );
+            <View style={styles.divider} />
+
+            {/* Botón Perfil */}
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() =>
+                    navigation.navigate(
+                        role === 'Tienda' ? 'PerfilTienda' : role === 'Cliente' ? 'PerfilCliente' : 'Login'
+                    )
+                }
+            >
+                <FontAwesome name="user" size={24} color="black" />
+                <Text style={styles.label}>Mi Perfil</Text>
+            </TouchableOpacity>
+        </View>
+    );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    backgroundColor: '#E0E0E0',
-  },
-  button: {
-    flex: 1, // Los botones ocuparán el mismo ancho
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  label: {
-    fontSize: 15,
-    color: 'black',
-    marginTop: 2,
-  },
-  divider: {
-    width: 5, // Ancho de la línea divisoria
-    backgroundColor: '#CCCCCC',
-    height: '70%', // Ajusta la altura de la línea divisoria
-  },
+    container: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+        backgroundColor: '#E0E0E0',
+    },
+    button: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    label: {
+        fontSize: 15,
+        color: 'black',
+        marginTop: 2,
+    },
+    divider: {
+        width: 5,
+        backgroundColor: '#CCCCCC',
+        height: '70%',
+    },
 });
 
 export default BotonFooter;
