@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker'; // Asegúrate de instalar esta librería
+import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native'; // Importar el hook
 
-const SeleccionSuscripcion = ({ navigation }) => {
+const SeleccionSuscripcion = () => {
+  const navigation = useNavigation(); // Obtener el objeto de navegación
   const [selectedSubscription, setSelectedSubscription] = useState('mensual');
   const [price, setPrice] = useState(5000);
   const [isPickerVisible, setPickerVisible] = useState(false);
 
-  // Opciones de suscripción y precios
   const subscriptionOptions = {
     mensual: 5000,
     trimestral: 15000,
@@ -15,22 +17,24 @@ const SeleccionSuscripcion = ({ navigation }) => {
     anual: 65000,
   };
 
-  // Cambiar suscripción
   const handleSubscriptionChange = (value) => {
     setSelectedSubscription(value);
     setPrice(subscriptionOptions[value]);
-    setPickerVisible(false); // Ocultar menú desplegable
+    setPickerVisible(false);
   };
 
   const handlePayment = () => {
-    console.log(`Suscripción seleccionada: ${selectedSubscription}`);
-    console.log(`Precio: $${price}`);
-    // Redirige a la pantalla de suscripción de tienda o lógica adicional de pago
     navigation.navigate('SuscripcionTienda', { subscriptionType: selectedSubscription });
   };
 
   return (
     <View style={styles.container}>
+      {/* Botón de regreso */}
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <MaterialIcons name="arrow-back" size={24} color="#000" />
+        <Text style={styles.backButtonText}>Regresar</Text>
+      </TouchableOpacity>
+
       <View style={styles.card}>
         <Text style={styles.title}>Suscripción</Text>
 
@@ -57,13 +61,11 @@ const SeleccionSuscripcion = ({ navigation }) => {
           </Picker>
         )}
 
-        {/* Precio */}
         <View style={styles.detailContainer}>
           <Text style={styles.label}>Precio:</Text>
           <Text style={styles.price}>{`$${price.toLocaleString()}`}</Text>
         </View>
 
-        {/* Botón para pagar */}
         <TouchableOpacity style={styles.button} onPress={handlePayment}>
           <Text style={styles.buttonText}>Pagar</Text>
         </TouchableOpacity>
@@ -79,6 +81,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     padding: 20,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 20,
+    left: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: '#007BFF',
+    marginLeft: 5,
   },
   card: {
     width: '90%',
@@ -133,7 +147,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#32CD32', // Verde
+    color: '#32CD32',
   },
   button: {
     width: '60%',

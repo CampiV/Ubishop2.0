@@ -8,13 +8,13 @@ import {
   Image,
   Alert,
   ScrollView,
-  Keyboard,
-  Platform,
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import { MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import Header from '../components/Header'; // Importar Header
+import BotonFooter from '../components/BotonFooter'; // Importar Footer
 
-const AgregarProducto = () => {
+const AgregarProducto = ({ navigation }) => {
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -85,125 +85,145 @@ const AgregarProducto = () => {
   };
 
   return (
-    <ScrollView
-      ref={scrollViewRef}
-      contentContainerStyle={styles.container}
-      keyboardShouldPersistTaps="handled"
-    >
-      <View style={styles.card}>
-        <Text style={styles.title}>Agregar Producto</Text>
+    <View style={styles.container}>
+      {/* Header */}
+      <Header />
 
-        {/* Nombre del producto */}
-        {productName.length > 0 && <Text style={styles.fieldTitle}>Nombre del producto</Text>}
-        <TextInput
-          style={styles.input}
-          placeholder="Nombre del producto"
-          placeholderTextColor="#B0B0B0"
-          value={productName}
-          onChangeText={setProductName}
-          onFocus={() => scrollViewRef.current.scrollTo({ y: 0, animated: true })}
-        />
+      {/* Contenido principal */}
+      <ScrollView
+        ref={scrollViewRef}
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* Botón de regreso */}
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <MaterialIcons name="arrow-back" size={24} color="#000" />
+          <Text style={styles.backButtonText}>Regresar</Text>
+        </TouchableOpacity>
 
-        {/* Precio */}
-        {price.length > 0 && <Text style={styles.fieldTitle}>Precio</Text>}
-        <View style={styles.priceInputContainer}>
-          <Text style={styles.pricePrefix}>$</Text>
+        <View style={styles.card}>
+          <Text style={styles.title}>Agregar Producto</Text>
+
+          {/* Nombre del producto */}
           <TextInput
-            style={styles.priceInput}
-            placeholder="0"
+            style={styles.input}
+            placeholder="Nombre del producto"
             placeholderTextColor="#B0B0B0"
-            value={price}
-            onChangeText={(text) => {
-              if (/^\d*$/.test(text)) setPrice(text); // Permite solo números
-            }}
-            keyboardType="numeric"
-            returnKeyType="done"
-            onFocus={() => scrollViewRef.current.scrollTo({ y: 100, animated: true })}
+            value={productName}
+            onChangeText={setProductName}
           />
-        </View>
 
-        {/* Categoría */}
-        {selectedCategory.length > 0 && <Text style={styles.fieldTitle}>Categoría</Text>}
-        <View style={styles.categoryInput}>
-          {isCustomCategory ? (
+          {/* Precio */}
+          <View style={styles.priceInputContainer}>
+            <Text style={styles.pricePrefix}>$</Text>
             <TextInput
-              style={styles.input}
-              placeholder="Escribe la nueva categoría"
+              style={styles.priceInput}
+              placeholder="0"
               placeholderTextColor="#B0B0B0"
-              value={selectedCategory}
-              onChangeText={setSelectedCategory}
-              onFocus={() => scrollViewRef.current.scrollTo({ y: 200, animated: true })}
+              value={price}
+              onChangeText={(text) => {
+                if (/^\d*$/.test(text)) setPrice(text); // Permite solo números
+              }}
+              keyboardType="numeric"
             />
+          </View>
+
+          {/* Categoría */}
+          <View style={styles.categoryInput}>
+            {isCustomCategory ? (
+              <TextInput
+                style={styles.input}
+                placeholder="Escribe la nueva categoría"
+                placeholderTextColor="#B0B0B0"
+                value={selectedCategory}
+                onChangeText={setSelectedCategory}
+              />
+            ) : (
+              <TouchableOpacity
+                style={styles.dropdown}
+                onPress={() =>
+                  Alert.alert('Seleccionar categoría', null, [
+                    ...categories.map((cat) => ({
+                      text: cat,
+                      onPress: () => handleCategoryChange(cat),
+                    })),
+                    {
+                      text: 'Otra',
+                      onPress: () => handleCategoryChange('Otra'),
+                    },
+                    { text: 'Cancelar', style: 'cancel' },
+                  ])
+                }
+              >
+                <Text style={styles.dropdownText}>
+                  {selectedCategory || 'Categoría'}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {/* Imagen */}
+          {image ? (
+            <View style={styles.imageContainer}>
+              <Image source={{ uri: image }} style={styles.image} />
+              <TouchableOpacity style={styles.removeButton} onPress={handleRemoveImage}>
+                <Text style={styles.removeButtonText}>X</Text>
+              </TouchableOpacity>
+            </View>
           ) : (
             <TouchableOpacity
-              style={styles.dropdown}
+              style={styles.imageButton}
               onPress={() =>
-                Alert.alert('Seleccionar categoría', null, [
-                  ...categories.map((cat) => ({
-                    text: cat,
-                    onPress: () => handleCategoryChange(cat),
-                  })),
-                  {
-                    text: 'Otra',
-                    onPress: () => handleCategoryChange('Otra'),
-                  },
+                Alert.alert('Subir imagen', 'Selecciona una opción', [
+                  { text: 'Cámara', onPress: handleCamera },
+                  { text: 'Galería', onPress: handleImagePicker },
                   { text: 'Cancelar', style: 'cancel' },
                 ])
               }
             >
-              <Text style={styles.dropdownText}>
-                {selectedCategory || 'Categoría'}
-              </Text>
+              <Text style={styles.imageButtonText}>Subir imagen</Text>
             </TouchableOpacity>
           )}
-        </View>
 
-        {/* Imagen */}
-        {image ? (
-          <View style={styles.imageContainer}>
-            <Image source={{ uri: image }} style={styles.image} />
-            <TouchableOpacity style={styles.removeButton} onPress={handleRemoveImage}>
-              <Text style={styles.removeButtonText}>X</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <TouchableOpacity
-            style={styles.imageButton}
-            onPress={() =>
-              Alert.alert('Subir imagen', 'Selecciona una opción', [
-                { text: 'Cámara', onPress: handleCamera },
-                { text: 'Galería', onPress: handleImagePicker },
-                { text: 'Cancelar', style: 'cancel' },
-              ])
-            }
-          >
-            <Text style={styles.imageButtonText}>Subir imagen</Text>
+          {/* Botón de guardar */}
+          <TouchableOpacity style={styles.saveButton} onPress={handleSaveProduct}>
+            <Text style={styles.saveButtonText}>Guardar</Text>
           </TouchableOpacity>
-        )}
+        </View>
+      </ScrollView>
 
-        {/* Botón de guardar */}
-        <TouchableOpacity style={styles.saveButton} onPress={handleSaveProduct}>
-          <Text style={styles.saveButtonText}>Guardar</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      {/* Footer */}
+      <BotonFooter />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex: 1,
     backgroundColor: '#FFFFFF',
+  },
+  content: {
+    flexGrow: 1,
     padding: 20,
   },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: '#007BFF',
+    marginLeft: 5,
+  },
   card: {
-    width: '90%',
     backgroundColor: '#F0F0F0',
     borderRadius: 15,
     padding: 20,
-    alignItems: 'center',
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowRadius: 5,
@@ -213,15 +233,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 22,
     color: '#000',
-  },
-  fieldTitle: {
-    width: '100%',
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#000',
-    marginBottom: 5,
   },
   input: {
     width: '100%',
@@ -257,11 +270,9 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   categoryInput: {
-    width: '100%',
     marginBottom: 15,
   },
   dropdown: {
-    width: '100%',
     height: 40,
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
@@ -275,7 +286,6 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   imageButton: {
-    width: '60%',
     height: 40,
     backgroundColor: '#007BFF',
     borderRadius: 20,
@@ -290,7 +300,6 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     position: 'relative',
-    width: '100%',
     height: 200,
     marginBottom: 20,
   },
@@ -316,7 +325,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   saveButton: {
-    width: '60%',
     height: 40,
     backgroundColor: '#32CD32',
     borderRadius: 20,

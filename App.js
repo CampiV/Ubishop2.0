@@ -1,28 +1,27 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { AuthProvider } from './components/AuthContext';
+import { AuthProvider, useAuth } from './components/AuthContext';
 import Home from './screens/Home';
 import HomeTienda from './screens/HomeTienda';
 import Login from './screens/Login';
 import Productos from './screens/Productos';
-import RegistroCliente from './screens/RegistroCliente';
-import RegistroTienda from './screens/RegistroTienda';
-import SeleccionRegistro from './screens/SeleccionRegistro';
-import SeleccionSuscripcion from './screens/SeleccionSuscripcion';
-import SuscripcionTienda from './screens/SuscripcionTienda';
+import PerfilCliente from './screens/PerfilCliente';
+import PerfilTienda from './screens/PerfilTienda';
 import AgregarProducto from './screens/AgregarProducto';
 import EditarProducto from './screens/EditarProducto';
 import EliminarProducto from './screens/EliminarProducto';
-import PerfilCliente from './screens/PerfilCliente';
-import PerfilTienda from './screens/PerfilTienda';
+import SuscripcionTienda from './screens/SuscripcionTienda';
+import SeleccionSuscripcion from './screens/SeleccionSuscripcion';
+import RegistroCliente from './screens/RegistroCliente';
+import RegistroTienda from './screens/RegistroTienda';
+import SeleccionRegistro from './screens/SeleccionRegistro';
 import Header from './components/Header';
 import BotonFooter from './components/BotonFooter';
 import { View, StyleSheet } from 'react-native';
 
 const Stack = createStackNavigator();
 
-// Layout Principal con Header y Footer
 const AppLayout = ({ children }) => (
     <View style={styles.container}>
         <Header />
@@ -31,33 +30,129 @@ const AppLayout = ({ children }) => (
     </View>
 );
 
-const AppNavigator = () => (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* Registrar todas las pantallas */}
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="HomeTienda" component={HomeTienda} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Productos" component={Productos} />
-        <Stack.Screen name="RegistroCliente" component={RegistroCliente} />
-        <Stack.Screen name="RegistroTienda" component={RegistroTienda} />
-        <Stack.Screen name="SeleccionRegistro" component={SeleccionRegistro} />
-        <Stack.Screen name="SeleccionSuscripcion" component={SeleccionSuscripcion} />
-        <Stack.Screen name="SuscripcionTienda" component={SuscripcionTienda} />
-        <Stack.Screen name="AgregarProducto" component={AgregarProducto} />
-        <Stack.Screen name="EditarProducto" component={EditarProducto} />
-        <Stack.Screen name="EliminarProducto" component={EliminarProducto} />
-        <Stack.Screen name="PerfilCliente" component={PerfilCliente} />
-        <Stack.Screen name="PerfilTienda" component={PerfilTienda} />
-    </Stack.Navigator>
-);
+const AppNavigator = () => {
+    const { isLoggedIn, role } = useAuth();
+
+    return (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+            {!isLoggedIn ? (
+                // Pantallas para usuarios no autenticados
+                <>
+                    <Stack.Screen name="Home">
+                        {() => (
+                            <AppLayout>
+                                <Home />
+                            </AppLayout>
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen name="Productos">
+                        {() => (
+                            <AppLayout>
+                                <Productos />
+                            </AppLayout>
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen name="Login">
+                        {() => (
+                            <AppLayout>
+                                <Login />
+                            </AppLayout>
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen name="SeleccionRegistro">
+                        {() => (
+                            <AppLayout>
+                                <SeleccionRegistro />
+                            </AppLayout>
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen name="RegistroCliente">
+                        {() => (
+                            <AppLayout>
+                                <RegistroCliente />
+                            </AppLayout>
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen name="RegistroTienda">
+                        {() => (
+                            <AppLayout>
+                                <RegistroTienda />
+                            </AppLayout>
+                        )}
+                    </Stack.Screen>
+                </>
+            ) : role === 'Cliente' ? (
+                // Pantallas para el rol "Cliente"
+                <>
+                    <Stack.Screen name="Home">
+                        {() => (
+                            <AppLayout>
+                                <Home />
+                            </AppLayout>
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen name="Productos">
+                        {() => (
+                            <AppLayout>
+                                <Productos />
+                            </AppLayout>
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen name="PerfilCliente">
+                        {() => (
+                            <AppLayout>
+                                <PerfilCliente />
+                            </AppLayout>
+                        )}
+                    </Stack.Screen>
+                </>
+            ) : (
+                // Pantallas para el rol "Tienda"
+                <>
+                    <Stack.Screen name="HomeTienda">
+                        {() => (
+                            <AppLayout>
+                                <HomeTienda />
+                            </AppLayout>
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen name="Productos">
+                        {() => (
+                            <AppLayout>
+                                <Productos />
+                            </AppLayout>
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen name="PerfilTienda">
+                        {() => (
+                            <AppLayout>
+                                <PerfilTienda />
+                            </AppLayout>
+                        )}
+                    </Stack.Screen>
+                    {/* Corregí las pantallas con problemas */}
+                    <Stack.Screen name="AgregarProducto" component={AgregarProducto} />
+                    <Stack.Screen name="EditarProducto" component={EditarProducto} />
+                    <Stack.Screen name="EliminarProducto" component={EliminarProducto} />
+                    <Stack.Screen name="SuscripcionTienda" component={SuscripcionTienda} />
+                    <Stack.Screen name="SeleccionSuscripcion">
+                        {() => (
+                            <AppLayout>
+                                <SeleccionSuscripcion />
+                            </AppLayout>
+                        )}
+                    </Stack.Screen>
+                </>
+            )}
+        </Stack.Navigator>
+    );
+};
 
 export default function App() {
     return (
         <AuthProvider>
             <NavigationContainer>
-                <AppLayout>
-                    <AppNavigator />
-                </AppLayout>
+                <AppNavigator />
             </NavigationContainer>
         </AuthProvider>
     );

@@ -4,7 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useAuth } from '../components/AuthContext';
 
 const PerfilCliente = () => {
-    const { role } = useAuth();
+    const { role, logout } = useAuth();
 
     // Verificación del rol
     if (role !== 'Cliente') {
@@ -41,10 +41,7 @@ const PerfilCliente = () => {
 
     return (
         <View style={styles.container}>
-            {/* Título */}
             <Text style={styles.title}>¡Bienvenido!</Text>
-
-            {/* Contenedor del formulario */}
             <View style={styles.formContainer}>
                 {/* Campo de Nombre */}
                 <View style={styles.inputContainer}>
@@ -60,7 +57,6 @@ const PerfilCliente = () => {
                         <FontAwesome name="edit" size={20} color="#B0B0B0" />
                     </TouchableOpacity>
                 </View>
-
                 {/* Campo de Apellido */}
                 <View style={styles.inputContainer}>
                     <TextInput
@@ -121,7 +117,7 @@ const PerfilCliente = () => {
                 )}
 
                 {/* Botón de Cerrar sesión */}
-                <TouchableOpacity style={styles.logoutButton} onPress={() => console.log('Cerrar sesión')}>
+                <TouchableOpacity style={styles.logoutButton} onPress={logout}>
                     <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
                 </TouchableOpacity>
             </View>
@@ -130,50 +126,46 @@ const PerfilCliente = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 30,
-    color: '#000',
-  },
-  formContainer: {
-    width: '100%',
-    backgroundColor: '#F0F0F0',
-    borderRadius: 15,
-    padding: 20,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 5,
-  },
-  inputContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  input: {
-    flex: 1,
-    height: 40,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    borderWidth: 1,
-    borderColor: '#CCC',
-    color: '#000',
-  },
-  editIcon: {
-    marginLeft: 10,
-  },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#FFFFFF',
+        padding: 20,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 30,
+        color: '#000',
+    },
+    formContainer: {
+        width: '100%',
+        backgroundColor: '#F0F0F0',
+        borderRadius: 15,
+        padding: 20,
+        alignItems: 'center',
+    },
+    inputContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+    input: {
+        flex: 1,
+        height: 40,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 20,
+        paddingHorizontal: 15,
+        borderWidth: 1,
+        borderColor: '#CCC',
+        color: '#000',
+    },
+    editIcon: {
+        marginLeft: 10,
+    },
+    
   editButtonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -208,20 +200,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  logoutButton: {
-    width: '100%',
-    height: 40,
-    backgroundColor: '#FF4500',
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  logoutButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+    logoutButton: {
+        width: '100%',
+        height: 40,
+        backgroundColor: '#FF4500',
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    logoutButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
 });
 
 export default PerfilCliente;

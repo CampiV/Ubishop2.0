@@ -1,5 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import Header from '../components/Header'; // Header personalizado
+import BotonFooter from '../components/BotonFooter'; // Footer personalizado
 
 const SuscripcionTienda = ({ navigation, subscriptionType = "Tipo suscripción", startDate = "Fecha de inicio", endDate = "Fecha de finalización" }) => {
   const handleChangeSubscription = () => {
@@ -8,30 +11,48 @@ const SuscripcionTienda = ({ navigation, subscriptionType = "Tipo suscripción",
 
   return (
     <View style={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.title}>Suscripción</Text>
+      {/* Header */}
+      <Header />
 
-        {/* Detalles de la suscripción */}
-        <View style={styles.detailContainer}>
-          <Text style={styles.label}>Suscripción</Text>
-          <Text style={styles.value}>{subscriptionType}</Text>
-        </View>
-
-        <View style={styles.detailContainer}>
-          <Text style={styles.label}>Fecha de inicio</Text>
-          <Text style={styles.value}>{startDate}</Text>
-        </View>
-
-        <View style={styles.detailContainer}>
-          <Text style={styles.label}>Fecha de finalización</Text>
-          <Text style={styles.value}>{endDate}</Text>
-        </View>
-
-        {/* Botón para cambiar la suscripción */}
-        <TouchableOpacity style={styles.button} onPress={handleChangeSubscription}>
-          <Text style={styles.buttonText}>Cambiar</Text>
+      {/* Contenido Principal */}
+      <View style={styles.content}>
+        {/* Botón de regreso */}
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <MaterialIcons name="arrow-back" size={24} color="#000" />
+          <Text style={styles.backButtonText}>Regresar</Text>
         </TouchableOpacity>
+
+        <View style={styles.card}>
+          <Text style={styles.title}>Suscripción</Text>
+
+          {/* Detalles de la suscripción */}
+          <View style={styles.detailContainer}>
+            <Text style={styles.label}>Suscripción</Text>
+            <Text style={styles.value}>{subscriptionType}</Text>
+          </View>
+
+          <View style={styles.detailContainer}>
+            <Text style={styles.label}>Fecha de inicio</Text>
+            <Text style={styles.value}>{startDate}</Text>
+          </View>
+
+          <View style={styles.detailContainer}>
+            <Text style={styles.label}>Fecha de finalización</Text>
+            <Text style={styles.value}>{endDate}</Text>
+          </View>
+
+          {/* Botón para cambiar la suscripción */}
+          <TouchableOpacity style={styles.button} onPress={handleChangeSubscription}>
+            <Text style={styles.buttonText}>Cambiar</Text>
+          </TouchableOpacity>
+        </View>
       </View>
+
+      {/* Footer */}
+      <BotonFooter />
     </View>
   );
 };
@@ -39,24 +60,32 @@ const SuscripcionTienda = ({ navigation, subscriptionType = "Tipo suscripción",
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#FFFFFF',
+  },
+  content: {
+    flex: 1,
     padding: 20,
   },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: '#007BFF',
+    marginLeft: 5,
+  },
   card: {
-    width: '90%', // Ocupa el 90% del ancho de la pantalla
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#FFFFFF',
     borderRadius: 15,
     padding: 20,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.1,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 2 },
-    elevation: 5,
-    minHeight: '50%', // Altura mínima más alargada
-    justifyContent: 'space-between',
+    elevation: 3,
   },
   title: {
     fontSize: 24,

@@ -1,26 +1,21 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useAuth } from '../components/AuthContext';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { login } = useAuth();
 
   const handleLogin = () => {
-    console.log('Email:', email);
-    console.log('Contraseña:', password);
-    // Aquí puedes agregar la lógica de inicio de sesión
+    login(email, password); // Llama a la función login con las credenciales
   };
 
   return (
     <View style={styles.container}>
-      {/* Título */}
       <Text style={styles.title}>¡Bienvenido!</Text>
-
-      {/* Contenedor del formulario */}
       <View style={styles.formContainer}>
         <Text style={styles.formTitle}>Iniciar sesión</Text>
-
-        {/* Campo de Email */}
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -28,8 +23,6 @@ const Login = ({ navigation }) => {
           value={email}
           onChangeText={setEmail}
         />
-
-        {/* Campo de Contraseña */}
         <TextInput
           style={styles.input}
           placeholder="Contraseña"
@@ -38,17 +31,11 @@ const Login = ({ navigation }) => {
           onChangeText={setPassword}
           secureTextEntry
         />
-
-        {/* Botón de Iniciar sesión */}
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Iniciar sesión</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Separador */}
       <Text style={styles.orText}>o</Text>
-
-      {/* Enlace a Registrarse */}
       <TouchableOpacity onPress={() => navigation.navigate('SeleccionRegistro')}>
         <Text style={styles.registerText}>Registrarse</Text>
       </TouchableOpacity>

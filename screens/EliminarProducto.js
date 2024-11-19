@@ -5,19 +5,22 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  ScrollView,
 } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import Header from '../components/Header'; // Importar Header
+import BotonFooter from '../components/BotonFooter'; // Importar BotonFooter
 import { products as productData } from '../components/ProductCard'; // Importa los productos desde ProductCard.js
 
-const EliminarProducto = () => {
+const EliminarProducto = ({ navigation }) => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [products, setProducts] = useState(productData); // Local state to manage product list
+  const [products, setProducts] = useState(productData);
   const [selectedProduct, setSelectedProduct] = useState('');
   const [deletedProduct, setDeletedProduct] = useState(null);
 
   useEffect(() => {
-    // Extrae categorías únicas desde los productos importados
     const uniqueCategories = [...new Set(productData.map((product) => product.category))];
     setCategories(uniqueCategories);
     setFilteredProducts(productData);
@@ -37,7 +40,7 @@ const EliminarProducto = () => {
     setSelectedCategory(category);
     const filtered = products.filter((product) => product.category === category);
     setFilteredProducts(filtered);
-    setSelectedProduct(''); // Reinicia la selección de producto
+    setSelectedProduct('');
   };
 
   const handleProductSelection = () => {
@@ -64,7 +67,7 @@ const EliminarProducto = () => {
     const productToDelete = filteredProducts.find(
       (product) => product.name === selectedProduct
     );
-    setDeletedProduct(productToDelete); // Guarda el producto eliminado temporalmente
+    setDeletedProduct(productToDelete);
     const remainingProducts = products.filter(
       (product) => product.name !== selectedProduct
     );
@@ -82,49 +85,63 @@ const EliminarProducto = () => {
 
     setProducts([...products, deletedProduct]);
     setFilteredProducts([...filteredProducts, deletedProduct]);
-    setDeletedProduct(null); // Elimina la referencia al producto eliminado
+    setDeletedProduct(null);
     Alert.alert('Acción deshecha', `El producto "${deletedProduct.name}" ha sido restaurado.`);
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.title}>Eliminar Producto</Text>
+      {/* Header */}
+      <Header />
 
-        {/* Título de categoría */}
-        {selectedCategory.length > 0 && (
-          <Text style={styles.fieldTitle}>Categoría seleccionada</Text>
-        )}
-        {/* Botón de categorías */}
-        <TouchableOpacity style={styles.dropdownButton} onPress={handleCategorySelection}>
-          <Text style={styles.dropdownButtonText}>
-            {selectedCategory || 'Seleccionar categoría'}
-          </Text>
+      {/* Contenido Principal */}
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+        {/* Botón de regreso */}
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <MaterialIcons name="arrow-back" size={24} color="#000" />
+          <Text style={styles.backButtonText}>Regresar</Text>
         </TouchableOpacity>
 
-        {/* Título de producto */}
-        {selectedProduct.length > 0 && (
-          <Text style={styles.fieldTitle}>Producto seleccionado</Text>
-        )}
-        {/* Botón de productos */}
-        <TouchableOpacity style={styles.dropdownButton} onPress={handleProductSelection}>
-          <Text style={styles.dropdownButtonText}>
-            {selectedProduct || 'Seleccionar producto'}
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.cardContainer}>
+          <View style={styles.card}>
+            <Text style={styles.title}>Eliminar Producto</Text>
 
-        {/* Botón para eliminar */}
-        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-          <Text style={styles.deleteButtonText}>Eliminar</Text>
-        </TouchableOpacity>
+            {selectedCategory.length > 0 && (
+              <Text style={styles.fieldTitle}>Categoría seleccionada</Text>
+            )}
+            <TouchableOpacity style={styles.dropdownButton} onPress={handleCategorySelection}>
+              <Text style={styles.dropdownButtonText}>
+                {selectedCategory || 'Seleccionar categoría'}
+              </Text>
+            </TouchableOpacity>
 
-        {/* Botón para deshacer */}
-        {deletedProduct && (
-          <TouchableOpacity style={styles.undoButton} onPress={handleUndo}>
-            <Text style={styles.undoButtonText}>Deshacer</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+            {selectedProduct.length > 0 && (
+              <Text style={styles.fieldTitle}>Producto seleccionado</Text>
+            )}
+            <TouchableOpacity style={styles.dropdownButton} onPress={handleProductSelection}>
+              <Text style={styles.dropdownButtonText}>
+                {selectedProduct || 'Seleccionar producto'}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+              <Text style={styles.deleteButtonText}>Eliminar</Text>
+            </TouchableOpacity>
+
+            {deletedProduct && (
+              <TouchableOpacity style={styles.undoButton} onPress={handleUndo}>
+                <Text style={styles.undoButtonText}>Deshacer</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      </ScrollView>
+
+      {/* Footer */}
+      <BotonFooter />
     </View>
   );
 };
@@ -132,10 +149,26 @@ const EliminarProducto = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  content: {
+    flexGrow: 1,
+    padding: 20,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: '#007BFF',
+    marginLeft: 5,
+  },
+  cardContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    padding: 20,
   },
   card: {
     width: '90%',

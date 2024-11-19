@@ -7,15 +7,19 @@ import {
   StyleSheet,
   Image,
   Alert,
+  ScrollView,
 } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import Header from '../components/Header'; // Importar Header
+import BotonFooter from '../components/BotonFooter'; // Importar BotonFooter
 import * as ImagePicker from 'expo-image-picker';
 import { products as productData } from '../components/ProductCard'; // Importa productos desde ProductCard.js
 
-const EditarProducto = () => {
+const EditarProducto = ({ navigation }) => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [products, setProducts] = useState(productData); // Local state to manage the product list
+  const [products, setProducts] = useState(productData);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const [productName, setProductName] = useState('');
@@ -24,7 +28,6 @@ const EditarProducto = () => {
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-    // Extrae categorías únicas desde los productos importados
     const uniqueCategories = [...new Set(productData.map((product) => product.category))];
     setCategories(uniqueCategories);
     setFilteredProducts(productData);
@@ -44,7 +47,7 @@ const EditarProducto = () => {
     setSelectedCategory(category);
     const filtered = products.filter((product) => product.category === category);
     setFilteredProducts(filtered);
-    setSelectedProduct(null); // Reinicia la selección de producto
+    setSelectedProduct(null);
     resetFields();
   };
 
@@ -128,7 +131,7 @@ const EditarProducto = () => {
       product.id === updatedProduct.id ? updatedProduct : product
     );
 
-    setProducts(updatedProducts); // Actualiza la lista de productos
+    setProducts(updatedProducts);
     Alert.alert('Producto actualizado', `El producto "${updatedProduct.name}" ha sido actualizado.`);
   };
 
@@ -141,81 +144,99 @@ const EditarProducto = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.title}>Editar Producto</Text>
+      {/* Header */}
+      <Header />
 
-        {/* Menú de categorías */}
-        <TouchableOpacity style={styles.dropdownButton} onPress={handleCategorySelection}>
-          <Text style={styles.dropdownButtonText}>
-            {selectedCategory || 'Seleccionar categoría'}
-          </Text>
+      {/* Contenido principal */}
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+        {/* Botón de regreso */}
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <MaterialIcons name="arrow-back" size={24} color="#000" />
+          <Text style={styles.backButtonText}>Regresar</Text>
         </TouchableOpacity>
 
-        {/* Menú de productos */}
-        <TouchableOpacity style={styles.dropdownButton} onPress={handleProductSelection}>
-          <Text style={styles.dropdownButtonText}>
-            {selectedProduct ? selectedProduct.name : 'Seleccionar producto'}
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.card}>
+          <Text style={styles.title}>Editar Producto</Text>
 
-        {/* Nombre del producto */}
-        <TextInput
-          style={styles.input}
-          placeholder="Nombre del producto"
-          placeholderTextColor="#B0B0B0"
-          value={productName}
-          onChangeText={setProductName}
-        />
-
-        {/* Descripción */}
-        <TextInput
-          style={styles.input}
-          placeholder="Descripción"
-          placeholderTextColor="#B0B0B0"
-          value={description}
-          onChangeText={setDescription}
-        />
-
-        {/* Precio */}
-        <TextInput
-          style={styles.input}
-          placeholder="Precio"
-          placeholderTextColor="#B0B0B0"
-          value={price}
-          onChangeText={(text) => {
-            if (/^\d*$/.test(text)) setPrice(text); // Permite solo números
-          }}
-          keyboardType="numeric"
-        />
-
-        {/* Imagen */}
-        {image ? (
-          <View style={styles.imageContainer}>
-            <Image source={{ uri: image }} style={styles.image} />
-            <TouchableOpacity style={styles.removeButton} onPress={handleRemoveImage}>
-              <Text style={styles.removeButtonText}>X</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <TouchableOpacity
-            style={styles.imageButton}
-            onPress={() =>
-              Alert.alert('Subir imagen', 'Selecciona una opción', [
-                { text: 'Cámara', onPress: handleCamera },
-                { text: 'Galería', onPress: handleImagePicker },
-                { text: 'Cancelar', style: 'cancel' },
-              ])
-            }
-          >
-            <Text style={styles.imageButtonText}>Subir imagen</Text>
+          {/* Menú de categorías */}
+          <TouchableOpacity style={styles.dropdownButton} onPress={handleCategorySelection}>
+            <Text style={styles.dropdownButtonText}>
+              {selectedCategory || 'Seleccionar categoría'}
+            </Text>
           </TouchableOpacity>
-        )}
 
-        {/* Botón de guardar */}
-        <TouchableOpacity style={styles.saveButton} onPress={handleSaveProduct}>
-          <Text style={styles.saveButtonText}>Guardar</Text>
-        </TouchableOpacity>
-      </View>
+          {/* Menú de productos */}
+          <TouchableOpacity style={styles.dropdownButton} onPress={handleProductSelection}>
+            <Text style={styles.dropdownButtonText}>
+              {selectedProduct ? selectedProduct.name : 'Seleccionar producto'}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Nombre del producto */}
+          <TextInput
+            style={styles.input}
+            placeholder="Nombre del producto"
+            placeholderTextColor="#B0B0B0"
+            value={productName}
+            onChangeText={setProductName}
+          />
+
+          {/* Descripción */}
+          <TextInput
+            style={styles.input}
+            placeholder="Descripción"
+            placeholderTextColor="#B0B0B0"
+            value={description}
+            onChangeText={setDescription}
+          />
+
+          {/* Precio */}
+          <TextInput
+            style={styles.input}
+            placeholder="Precio"
+            placeholderTextColor="#B0B0B0"
+            value={price}
+            onChangeText={(text) => {
+              if (/^\d*$/.test(text)) setPrice(text);
+            }}
+            keyboardType="numeric"
+          />
+
+          {/* Imagen */}
+          {image ? (
+            <View style={styles.imageContainer}>
+              <Image source={{ uri: image }} style={styles.image} />
+              <TouchableOpacity style={styles.removeButton} onPress={handleRemoveImage}>
+                <Text style={styles.removeButtonText}>Eliminar</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <TouchableOpacity
+              style={styles.imageButton}
+              onPress={() =>
+                Alert.alert('Subir imagen', 'Selecciona una opción', [
+                  { text: 'Cámara', onPress: handleCamera },
+                  { text: 'Galería', onPress: handleImagePicker },
+                  { text: 'Cancelar', style: 'cancel' },
+                ])
+              }
+            >
+              <Text style={styles.imageButtonText}>Subir imagen</Text>
+            </TouchableOpacity>
+          )}
+
+          {/* Botón de guardar */}
+          <TouchableOpacity style={styles.saveButton} onPress={handleSaveProduct}>
+            <Text style={styles.saveButtonText}>Guardar</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+
+      {/* Footer */}
+      <BotonFooter />
     </View>
   );
 };
@@ -223,17 +244,26 @@ const EditarProducto = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#FFFFFF',
+  },
+  content: {
+    flexGrow: 1,
     padding: 20,
   },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: '#007BFF',
+    marginLeft: 5,
+  },
   card: {
-    width: '90%',
     backgroundColor: '#FFFBEA',
     borderRadius: 15,
     padding: 20,
-    alignItems: 'center',
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowRadius: 5,
@@ -271,8 +301,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#CCC',
     color: '#000',
-  },
-  imageButton: {
+  }, imageButton: {
     width: '60%',
     height: 40,
     backgroundColor: '#007BFF',
