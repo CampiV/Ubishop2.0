@@ -8,6 +8,7 @@ import Login from './screens/Login';
 import Productos from './screens/Productos';
 import PerfilCliente from './screens/PerfilCliente';
 import PerfilTienda from './screens/PerfilTienda';
+import AgregarUbicacion from './screens/AgregarUbicacion';
 import AgregarProducto from './screens/AgregarProducto';
 import EditarProducto from './screens/EditarProducto';
 import EliminarProducto from './screens/EliminarProducto';
@@ -130,6 +131,7 @@ const AppNavigator = () => {
                             </AppLayout>
                         )}
                     </Stack.Screen>
+                    <Stack.Screen name="AgregarUbicacion" component={AgregarUbicacion} />
                     <Stack.Screen name="AgregarProducto" component={AgregarProducto} />
                     <Stack.Screen name="EditarProducto" component={EditarProducto} />
                     <Stack.Screen name="EliminarProducto" component={EliminarProducto} />

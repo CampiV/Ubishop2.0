@@ -1,13 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, ActivityIndicator, Alert, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Alert, Dimensions, TouchableOpacity, Text } from 'react-native';
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
-import { FontAwesome } from '@expo/vector-icons'; // Para el icono del botón
+import { FontAwesome } from '@expo/vector-icons';
+import { useNavigation, useRoute } from '@react-navigation/native'; // Agregado useRoute
 
 const Mapa = () => {
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(true);
-  const mapRef = useRef(null); // Referencia al mapa
+  const mapRef = useRef(null);
+  const navigation = useNavigation();
+  const route = useRoute(); // Obtener parámetros de navegación
+  const fromPerfilTienda = route.params?.fromPerfilTienda || false; // Parámetro opcional
+  const [selectedLocation, setSelectedLocation] = useState(null); // Nueva ubicación seleccionada
 
   // Lista de marcadores
   const [markers, setMarkers] = useState([
@@ -78,11 +83,29 @@ const Mapa = () => {
         {
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
-          latitudeDelta: 0.005, // Zoom más cercano para la ubicación actual
+          latitudeDelta: 0.005,
           longitudeDelta: 0.005,
         },
         1000
       );
+    }
+  };
+
+  // Manejar selección en el mapa
+  const handleMapPress = (event) => {
+    if (fromPerfilTienda) { // Solo permitir si viene de PerfilTienda
+      const { latitude, longitude } = event.nativeEvent.coordinate;
+      setSelectedLocation({ latitude, longitude });
+    }
+  };
+
+  // Guardar ubicación seleccionada
+  const saveLocation = () => {
+    if (selectedLocation) {
+      console.log('Ubicación seleccionada:', selectedLocation);
+      navigation.navigate('PerfilTienda', { location: selectedLocation });
+    } else {
+      Alert.alert('Error', 'Selecciona una ubicación en el mapa.');
     }
   };
 
@@ -97,7 +120,7 @@ const Mapa = () => {
   return (
     <View style={styles.container}>
       <MapView
-        ref={mapRef} // Asignar la referencia al mapa
+        ref={mapRef}
         style={styles.map}
         initialRegion={{
           latitude: location?.coords.latitude || 37.78825,
@@ -106,6 +129,7 @@ const Mapa = () => {
           longitudeDelta: 0.01,
         }}
         showsUserLocation={true}
+        onPress={handleMapPress}
       >
         {markers.map((marker) => (
           <Marker
@@ -116,12 +140,23 @@ const Mapa = () => {
             }}
             title={marker.title}
             description={marker.description}
-            onPress={() => zoomToMarker(marker.latitude, marker.longitude)} // Al presionar el marcador, se acerca
+            onPress={() => zoomToMarker(marker.latitude, marker.longitude)}
           />
         ))}
+        {selectedLocation && fromPerfilTienda && (
+          <Marker
+            coordinate={selectedLocation}
+            pinColor="blue"
+          />
+        )}
       </MapView>
 
-      {/* Botón para ir a la ubicación actual */}
+      {fromPerfilTienda && ( // Mostrar solo si viene de PerfilTienda
+        <TouchableOpacity style={styles.saveButton} onPress={saveLocation}>
+          <Text style={styles.saveButtonText}>Guardar ubicación</Text>
+        </TouchableOpacity>
+      )}
+
       <TouchableOpacity style={styles.locationButton} onPress={goToMyLocation}>
         <FontAwesome name="location-arrow" size={24} color="#FFFFFF" />
       </TouchableOpacity>
@@ -146,7 +181,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    backgroundColor: '#4169E1', // Color azul
+    backgroundColor: '#4169E1',
     width: 50,
     height: 50,
     borderRadius: 25,
@@ -156,7 +191,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 2 },
-    elevation: 5, // Sombra para Android
+    elevation: 5,
+  },
+  saveButton: {
+    position: 'absolute',
+    bottom: 80,
+    backgroundColor: '#32CD32',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  saveButtonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 
