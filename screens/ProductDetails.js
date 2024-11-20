@@ -8,16 +8,18 @@ const ProductDetails = ({ route, navigation }) => {
     { id: 1, name: 'Vicente', rating: 5, comment: 'Producto a buen precio y muy buena atención.' },
   ]);
   const [newReview, setNewReview] = useState('');
-  const [newRating, setNewRating] = useState(0);
+  const [newRating, setNewRating] = useState('');
 
+  // Función para añadir una nueva reseña
   const handleAddReview = () => {
-    if (newReview.trim() && newRating > 0) {
+    const rating = Math.min(5, Math.max(1, parseInt(newRating))); // Asegura que el rango sea de 1 a 5
+    if (newReview.trim() && rating > 0) {
       setReviews([
         ...reviews,
-        { id: reviews.length + 1, name: 'Usuario', rating: newRating, comment: newReview },
+        { id: reviews.length + 1, name: 'Usuario', rating, comment: newReview },
       ]);
       setNewReview('');
-      setNewRating(0);
+      setNewRating('');
     }
   };
 
@@ -63,8 +65,8 @@ const ProductDetails = ({ route, navigation }) => {
           style={styles.input}
           placeholder="Calificación (1-5)"
           keyboardType="numeric"
-          value={newRating.toString()}
-          onChangeText={(value) => setNewRating(Number(value))}
+          value={newRating}
+          onChangeText={(value) => setNewRating(value.replace(/[^0-9]/g, ''))} // Solo números permitidos
         />
         <TouchableOpacity style={styles.addReviewButton} onPress={handleAddReview}>
           <Text style={styles.addReviewButtonText}>Agregar Reseña</Text>
