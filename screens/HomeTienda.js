@@ -9,7 +9,7 @@ const HomeTienda = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.greeting}>¡Hola! Tu Tienda</Text>
+            <Text style={styles.greeting}>¡Hola! Tu tienda</Text> {/*Consumir Nombre de Tienda*/}
 
             {/* Botones */}
             <View style={styles.row}>

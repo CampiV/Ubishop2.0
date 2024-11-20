@@ -39,44 +39,44 @@ const AppNavigator = () => {
                 // Pantallas para usuarios no autenticados
                 <>
                     <Stack.Screen name="Home">
-                        {() => (
+                        {({ navigation }) => (
                             <AppLayout>
-                                <Home />
+                                <Home navigation={navigation} />
                             </AppLayout>
                         )}
                     </Stack.Screen>
                     <Stack.Screen name="Productos">
-                        {() => (
+                        {({ navigation }) => (
                             <AppLayout>
-                                <Productos />
+                                <Productos navigation={navigation} />
                             </AppLayout>
                         )}
                     </Stack.Screen>
                     <Stack.Screen name="Login">
-                        {() => (
+                        {({ navigation }) => (
                             <AppLayout>
-                                <Login />
+                                <Login navigation={navigation} />
                             </AppLayout>
                         )}
                     </Stack.Screen>
                     <Stack.Screen name="SeleccionRegistro">
-                        {() => (
+                        {({ navigation }) => (
                             <AppLayout>
-                                <SeleccionRegistro />
+                                <SeleccionRegistro navigation={navigation} />
                             </AppLayout>
                         )}
                     </Stack.Screen>
                     <Stack.Screen name="RegistroCliente">
-                        {() => (
+                        {({ navigation }) => (
                             <AppLayout>
-                                <RegistroCliente />
+                                <RegistroCliente navigation={navigation} />
                             </AppLayout>
                         )}
                     </Stack.Screen>
                     <Stack.Screen name="RegistroTienda">
-                        {() => (
+                        {({ navigation }) => (
                             <AppLayout>
-                                <RegistroTienda />
+                                <RegistroTienda navigation={navigation} />
                             </AppLayout>
                         )}
                     </Stack.Screen>
@@ -85,23 +85,23 @@ const AppNavigator = () => {
                 // Pantallas para el rol "Cliente"
                 <>
                     <Stack.Screen name="Home">
-                        {() => (
+                        {({ navigation }) => (
                             <AppLayout>
-                                <Home />
+                                <Home navigation={navigation} />
                             </AppLayout>
                         )}
                     </Stack.Screen>
                     <Stack.Screen name="Productos">
-                        {() => (
+                        {({ navigation }) => (
                             <AppLayout>
-                                <Productos />
+                                <Productos navigation={navigation} />
                             </AppLayout>
                         )}
                     </Stack.Screen>
                     <Stack.Screen name="PerfilCliente">
-                        {() => (
+                        {({ navigation }) => (
                             <AppLayout>
-                                <PerfilCliente />
+                                <PerfilCliente navigation={navigation} />
                             </AppLayout>
                         )}
                     </Stack.Screen>
@@ -110,35 +110,34 @@ const AppNavigator = () => {
                 // Pantallas para el rol "Tienda"
                 <>
                     <Stack.Screen name="HomeTienda">
-                        {() => (
+                        {({ navigation }) => (
                             <AppLayout>
-                                <HomeTienda />
+                                <HomeTienda navigation={navigation} />
                             </AppLayout>
                         )}
                     </Stack.Screen>
                     <Stack.Screen name="Productos">
-                        {() => (
+                        {({ navigation }) => (
                             <AppLayout>
-                                <Productos />
+                                <Productos navigation={navigation} />
                             </AppLayout>
                         )}
                     </Stack.Screen>
                     <Stack.Screen name="PerfilTienda">
-                        {() => (
+                        {({ navigation }) => (
                             <AppLayout>
-                                <PerfilTienda />
+                                <PerfilTienda navigation={navigation} />
                             </AppLayout>
                         )}
                     </Stack.Screen>
-                    {/* Corregí las pantallas con problemas */}
                     <Stack.Screen name="AgregarProducto" component={AgregarProducto} />
                     <Stack.Screen name="EditarProducto" component={EditarProducto} />
                     <Stack.Screen name="EliminarProducto" component={EliminarProducto} />
                     <Stack.Screen name="SuscripcionTienda" component={SuscripcionTienda} />
                     <Stack.Screen name="SeleccionSuscripcion">
-                        {() => (
+                        {({ navigation }) => (
                             <AppLayout>
-                                <SeleccionSuscripcion />
+                                <SeleccionSuscripcion navigation={navigation} />
                             </AppLayout>
                         )}
                     </Stack.Screen>
@@ -147,6 +146,7 @@ const AppNavigator = () => {
         </Stack.Navigator>
     );
 };
+
 
 export default function App() {
     return (
