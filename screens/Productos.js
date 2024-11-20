@@ -31,7 +31,15 @@ const Productos = () => {
     .filter((product) =>
       categoryFilter === 'Todos' ? true : product.category === categoryFilter
     )
-    .sort((a, b) => (priceOrder === 'asc' ? a.price - b.price : priceOrder === 'desc' ? b.price - a.price : 0));
+    .sort((a, b) => {
+      // Asegurarse de que el precio sea un número
+      const priceA = parseFloat(a.price);
+      const priceB = parseFloat(b.price);
+
+      if (priceOrder === 'asc') return priceA - priceB; // Orden ascendente
+      if (priceOrder === 'desc') return priceB - priceA; // Orden descendente
+      return 0; // Sin orden
+    });
 
   // Función para seleccionar categoría y cerrar el modal
   const handleCategorySelect = (category) => {
@@ -67,14 +75,18 @@ const Productos = () => {
         <TouchableOpacity
           style={[styles.filterButton, priceOrder && styles.activeFilter]}
           onPress={() =>
-            setPriceOrder(priceOrder === 'asc' ? 'desc' : priceOrder === 'desc' ? null : 'asc')
+            setPriceOrder((prevOrder) => {
+              if (prevOrder === 'asc') return 'desc';
+              if (prevOrder === 'desc') return null;
+              return 'asc';
+            })
           }
         >
           <Text style={styles.filterText}>
             {priceOrder === 'asc'
-              ? 'Mayor a menor'
-              : priceOrder === 'desc'
               ? 'Menor a mayor'
+              : priceOrder === 'desc'
+              ? 'Mayor a menor'
               : 'Ordenar por precio'}
           </Text>
         </TouchableOpacity>
