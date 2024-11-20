@@ -31,13 +31,12 @@ const Home = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Mapa */}
-      <View style={styles.mapContainer}>
-        <Mapa />
-      </View>
-
       {/* Productos destacados */}
       <ScrollView contentContainerStyle={styles.productsContainer}>
+        {/* Mapa */}
+        <View style={styles.mapContainer}>
+          <Mapa />
+        </View>
         {products.slice(0, 4).map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
