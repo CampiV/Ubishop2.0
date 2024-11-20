@@ -5,23 +5,20 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  Text,
   Modal,
   FlatList,
+  Text,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { ProductCard, products } from '../components/ProductCard';
+import { useNavigation } from '@react-navigation/native';
 
 const Productos = () => {
   const [searchText, setSearchText] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('Todos'); // Filtro de categoría
   const [priceOrder, setPriceOrder] = useState(null); // Orden de precios
-  const [isModalVisible, setModalVisible] = useState(false); // Estado para controlar el menú desplegable
-
-  // Función de búsqueda
-  const handleSearch = () => {
-    console.log(`Texto buscado: ${searchText}`);
-  };
+  const [isModalVisible, setModalVisible] = useState(false); // Estado del modal
+  const navigation = useNavigation();
 
   // Obtener las categorías únicas de los productos
   const categories = ['Todos', ...new Set(products.map((product) => product.category))];
@@ -32,20 +29,13 @@ const Productos = () => {
       categoryFilter === 'Todos' ? true : product.category === categoryFilter
     )
     .sort((a, b) => {
-      // Asegurarse de que el precio sea un número
       const priceA = parseFloat(a.price);
       const priceB = parseFloat(b.price);
 
-      if (priceOrder === 'asc') return priceA - priceB; // Orden ascendente
-      if (priceOrder === 'desc') return priceB - priceA; // Orden descendente
-      return 0; // Sin orden
+      if (priceOrder === 'asc') return priceA - priceB;
+      if (priceOrder === 'desc') return priceB - priceA;
+      return 0;
     });
-
-  // Función para seleccionar categoría y cerrar el modal
-  const handleCategorySelect = (category) => {
-    setCategoryFilter(category);
-    setModalVisible(false);
-  };
 
   return (
     <View style={styles.container}>
@@ -57,21 +47,18 @@ const Productos = () => {
           placeholderTextColor="#B0B0B0"
           value={searchText}
           onChangeText={setSearchText}
-          onSubmitEditing={handleSearch}
         />
-        <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
+        <TouchableOpacity style={styles.searchButton}>
           <FontAwesome name="search" size={20} color="#B0B0B0" />
         </TouchableOpacity>
       </View>
 
       {/* Filtros */}
       <View style={styles.filtersContainer}>
-        {/* Botón de categorías */}
         <TouchableOpacity style={styles.filterButton} onPress={() => setModalVisible(true)}>
           <Text style={styles.filterText}>Categoría: {categoryFilter}</Text>
         </TouchableOpacity>
 
-        {/* Botón para ordenar por precio */}
         <TouchableOpacity
           style={[styles.filterButton, priceOrder && styles.activeFilter]}
           onPress={() =>
@@ -92,37 +79,42 @@ const Productos = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Modal para selección de categoría */}
+      {/* Modal para categorías */}
       <Modal visible={isModalVisible} transparent animationType="slide">
         <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Selecciona una categoría</Text>
-            <FlatList
-              data={categories}
-              keyExtractor={(item) => item}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={styles.modalItem}
-                  onPress={() => handleCategorySelect(item)}
-                >
-                  <Text style={styles.modalItemText}>{item}</Text>
-                </TouchableOpacity>
-              )}
-            />
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.closeButtonText}>Cerrar</Text>
-            </TouchableOpacity>
-          </View>
+          <FlatList
+            data={categories}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.modalItem}
+                onPress={() => {
+                  setCategoryFilter(item);
+                  setModalVisible(false);
+                }}
+              >
+                <Text style={styles.modalItemText}>{item}</Text>
+              </TouchableOpacity>
+            )}
+          />
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setModalVisible(false)}
+          >
+            <Text style={styles.closeButtonText}>Cerrar</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
 
       {/* Productos */}
       <ScrollView contentContainerStyle={styles.productsContainer}>
         {filteredProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <TouchableOpacity
+            key={product.id}
+            onPress={() => navigation.navigate('ProductDetails', { product })}
+          >
+            <ProductCard product={product} />
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
@@ -140,11 +132,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F0F0F0',
     borderRadius: 10,
-    width: '100%',
     paddingHorizontal: 10,
     marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#CCC',
   },
   searchBar: {
     flex: 1,
@@ -169,7 +158,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#4169E1',
   },
   filterText: {
-    color: '#000',
     fontSize: 14,
     fontWeight: 'bold',
   },
@@ -180,43 +168,19 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  modalContent: {
-    width: '80%',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
   modalItem: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#CCC',
-    width: '100%',
+    padding: 10,
   },
   modalItemText: {
     fontSize: 16,
-    textAlign: 'center',
   },
   closeButton: {
-    marginTop: 20,
-    backgroundColor: '#4169E1',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-  },
-  closeButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
+    marginTop: 10,
+    alignSelf: 'center',
+    padding: 10,
   },
 });
 
