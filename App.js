@@ -17,6 +17,7 @@ import SeleccionSuscripcion from './screens/SeleccionSuscripcion';
 import RegistroCliente from './screens/RegistroCliente';
 import RegistroTienda from './screens/RegistroTienda';
 import SeleccionRegistro from './screens/SeleccionRegistro';
+import ProductDetails from './screens/ProductDetails'; // Nueva pantalla de detalles del producto
 import Header from './components/Header';
 import BotonFooter from './components/BotonFooter';
 import { View, StyleSheet } from 'react-native';
@@ -81,6 +82,13 @@ const AppNavigator = () => {
                             </AppLayout>
                         )}
                     </Stack.Screen>
+                    <Stack.Screen name="ProductDetails">
+                        {({ navigation, route }) => (
+                            <AppLayout>
+                                <ProductDetails navigation={navigation} route={route} />
+                            </AppLayout>
+                        )}
+                    </Stack.Screen>
                 </>
             ) : role === 'Cliente' ? (
                 // Pantallas para el rol "Cliente"
@@ -103,6 +111,13 @@ const AppNavigator = () => {
                         {({ navigation }) => (
                             <AppLayout>
                                 <PerfilCliente navigation={navigation} />
+                            </AppLayout>
+                        )}
+                    </Stack.Screen>
+                    <Stack.Screen name="ProductDetails">
+                        {({ navigation, route }) => (
+                            <AppLayout>
+                                <ProductDetails navigation={navigation} route={route} />
                             </AppLayout>
                         )}
                     </Stack.Screen>
@@ -143,12 +158,18 @@ const AppNavigator = () => {
                             </AppLayout>
                         )}
                     </Stack.Screen>
+                    <Stack.Screen name="ProductDetails">
+                        {({ navigation, route }) => (
+                            <AppLayout>
+                                <ProductDetails navigation={navigation} route={route} />
+                            </AppLayout>
+                        )}
+                    </Stack.Screen>
                 </>
             )}
         </Stack.Navigator>
     );
 };
-
 
 export default function App() {
     return (
